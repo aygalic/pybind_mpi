@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from mpi_lib import Pet, Dog
+from example_inheritance import Pet, Dog
 
 
 

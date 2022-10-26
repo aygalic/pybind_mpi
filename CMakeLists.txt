@@ -29,3 +29,8 @@ endif()
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/helloWorld.py
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 
+
+
+pybind11_add_module(example_inheritance example_inheritance.cpp)
+
+
