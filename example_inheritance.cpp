@@ -19,11 +19,7 @@ private:
 class Dog : public Pet {
   public:
     Dog(const std::string &name) : Pet(name) { }
-    void setName(const std::string &name_) { name = name_; }
-    const std::string &getName() const { return name; }
     std::string bark() const { return "woof!"; }
-  private:
-    std::string name;
 };
 
 
