@@ -12,7 +12,9 @@ using pymod = pybind11::module;
 class Distributed
 {
 public:
-  Distributed() : comm_global(MPI_COMM_WORLD) {}
+  Distributed() : comm_global(MPI_COMM_WORLD) {
+  	MPI_Comm_size(comm_global, &world_size);
+  }
   
   ~Distributed() {}
   
@@ -66,7 +68,28 @@ public:
       }
     }
   }
+
+  int basic_operation(int i, int j) {
+    int sum = 0;
+    for(int l = 0; l < i; l++){
+        sum = sum + j;
+    }
+    return sum;
+  }
+
+  int mpi_basic_operation(int i, int j){
+    int local_sum = 0;
+    int total = 0;
+    for(int l = 0; l < floor(i/world_size+1); l++){
+        local_sum = local_sum + j;
+    }
+    MPI_Reduce (&local_sum, &total, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    return total;
+  }
+
 private:
+	int world_size;
+
   MPI_Comm comm_global;
 };
 
@@ -78,8 +101,10 @@ PYBIND11_MODULE(mpi_lib, mmod)
   mmod.doc() = MODULE_DESCRIPTION;
   
   py::class_<Distributed>(mmod, "Distributed")    
-    //    .def(py::init<py::object &>())
+    //.def(py::init<py::object &>())
     .def(py::init<>())
-    .def("say_hi", &Distributed::say_hi, "Each process will say hi");
+    .def("say_hi", &Distributed::say_hi, "Each process will say hi")
+    .def("basic_operation", &Distributed::basic_operation, "serial sum")
+    .def("mpi_basic_operation", &Distributed::mpi_basic_operation, "parellel sum");
   
 }

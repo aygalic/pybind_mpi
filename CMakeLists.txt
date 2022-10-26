@@ -12,7 +12,12 @@ set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS})
 
 include_directories(${MPI_INCLUDE_PATH})
 
-add_subdirectory(pybind11)
+
+set(PATH_TO_PYBIND "/root/pacs_mnt/pyfex/pybind11")
+include_directories(SYSTEM pybind11/include)
+include_directories(SYSTEM $ENV{mkPythonInc})
+add_subdirectory(${PATH_TO_PYBIND} ../)
+
 pybind11_add_module(mpi_lib mpi_lib.cpp)
 target_link_libraries(mpi_lib PRIVATE mpi)
 if(OpenMP_CXX_FOUND)
